@@ -20,10 +20,10 @@ os.makedirs(BASE_FOlDER,exist_ok=True)
 _INTENT_TO_SLOTS = os.path.join(BASE_FOlDER,'intents_slots.json')
 _INTENT_TO_INPUT = os.path.join(BASE_FOlDER,'intent_to_input.csv')
 _INTENT_TO_OUTPUT = os.path.join(BASE_FOlDER,'intent_to_output.csv')
-_BPA_APIS = os.path.join(BASE_FOlDER,'bpa_apis.csv')
+_APIS = os.path.join(BASE_FOlDER,'apis.csv')
 _PATH_PARAMS = os.path.join(BASE_FOlDER,'path_params.csv')
 _QUERY_PARAMS = os.path.join(BASE_FOlDER,'query_params.csv')
-_BPA_RESPONSE = os.path.join(BASE_FOlDER,'bpa.html')
+_RESPONSE = os.path.join(BASE_FOlDER,'sample.html')
     
 class Slot:
     def __init__(self,paramName:str,question:str,mandatory:bool,dataType:str,type:str,regexValidator:Optional[str],
@@ -63,7 +63,7 @@ class AdditionalInfo(NamedTuple):
     
 _additional_info = dict()
 
-with open('ms-script-runner.csv', mode='r') as infile:
+with open('runner.csv', mode='r') as infile:
     reader = csv.reader(infile)
     next(reader)
     for row in reader:
@@ -106,7 +106,7 @@ def parse_html_table(table : parsel.selector.SelectorList , type: str) -> Iterat
 response = requests.get(URL,verify=False).text
 
 
-with open(_BPA_RESPONSE, 'w') as file:
+with open(_RESPONSE, 'w') as file:
     file.write(response)
 selector = parsel.Selector(text=response)
 
@@ -117,7 +117,7 @@ intent_to_output = []
 api_list = []
 intents_json = None
 
-with open(_BPA_APIS, 'w') as file:
+with open(_APIS, 'w') as file:
     file.write("apiName,apiDesc,http_method,uri")
     file.write('\n')
     
@@ -153,9 +153,9 @@ with open(_BPA_APIS, 'w') as file:
                     api.slots.append(slot_value)
             has_slots =  True if len(api.slots) > 0 else False
             intent_to_output.append(f'{lowercase_intent},,{has_slots},api\n')
-    bpa_apis = Apis(apis=apis)
+    apis_encode = Apis(apis=apis)
     jsonpickle.set_encoder_options('json', indent=4) # sort_keys=True, indent=4)
-    intents_json =jsonpickle.encode(bpa_apis,unpicklable=False)
+    intents_json =jsonpickle.encode(apis_encode,unpicklable=False)
 
 
 

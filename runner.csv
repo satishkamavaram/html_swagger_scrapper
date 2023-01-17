@@ -1,0 +1,3 @@
+param,additionalInfo,defaultValue,regexValidator,listOfSupportedValues,functionNameValidator
+filter,filter,filter,,"yes,no",
+limit,limit,10,^([2-9]|1[0-6])$,,
